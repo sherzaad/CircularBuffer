@@ -6,8 +6,9 @@
 #define BUF_TYPE uint8_t //data type of  RBuf_t variables
 #define ARR_TYPE uint8_t //data type for RBuf_t pointer array
 
-#define IsEmpty -1
-#define IsFull -2
+#define NoMemory -1
+#define IsEmpty -2
+#define IsFull -3
 
 typedef struct BufS
 {
