@@ -72,15 +72,16 @@ class CircularBuffer {
 
     //clear Buffer
     inline void Flush (uint8_t clearBuffer = 0)
-    {
+    {      
+      if(Buffer.arr == NULL) return;
+      else if (clearBuffer)
+      {
+        memset (Buffer.arr, 0, sizeof(Buffer.arr));
+      }
+      
       Buffer.count  = 0;
       Buffer.head   = 0;
       Buffer.tail   = 0;
-
-      if (clearBuffer)
-      {
-        if(Buffer.arr != NULL) memset (Buffer.arr, 0, sizeof(Buffer.arr));
-      }
     }
 
     //release memory
