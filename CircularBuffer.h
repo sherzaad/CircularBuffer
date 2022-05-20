@@ -27,8 +27,9 @@ class CircularBuffer {
     //return status of buffer
     inline int8_t Status()
     {
-      if (Buffer.count == Buffer.Size) return -2; //buffer overflow
-      else if (Buffer.count == 0) return -1; //buffer empty
+      if(Buffer.arr == NULL) return -1; //was unable to allocate memory for buffer
+      else if (Buffer.count == 0) return -2; //buffer empty
+      else if (Buffer.count == Buffer.Size) return -3; //buffer overflow
 
       return 1; //buffer contains unread data
     }
@@ -36,7 +37,8 @@ class CircularBuffer {
     //return element from Buffer
     inline int8_t Get(ARR_TYPE &c)
     {
-      if (Buffer.count > 0) {
+      if(Buffer.arr == NULL) return -1; //was unable to allocate memory for buffer
+      else if (Buffer.count > 0) {
         c = Buffer.arr[Buffer.tail];
 
         ++Buffer.tail;
@@ -47,13 +49,14 @@ class CircularBuffer {
         return 1;
       }
 
-      return -1; //Buffer is empty
+      return -2; //Buffer is empty
     }
 
     //add element to Buffer
     inline int8_t Put(ARR_TYPE c)
     {
-      if (Buffer.count < Buffer.Size) {
+      if(Buffer.arr == NULL) return -1; //was unable to allocate memory for buffer
+      else if (Buffer.count < Buffer.Size) {
         Buffer.arr[Buffer.head] = c;
 
         ++Buffer.head;
@@ -64,7 +67,7 @@ class CircularBuffer {
         return 1;
       }
 
-      return -2; //Buffer is full
+      return -3; //Buffer is full
     }
 
     //clear Buffer
@@ -76,14 +79,14 @@ class CircularBuffer {
 
       if (clearBuffer)
       {
-        memset (Buffer.arr, 0, sizeof(Buffer.arr));
+        if(Buffer.arr != NULL) memset (Buffer.arr, 0, sizeof(Buffer.arr));
       }
     }
 
     //release memory
     inline void FreeBuffer()
     {
-      free(Buffer.arr);
+      if(Buffer.arr != NULL) free(Buffer.arr);
     }
 
     //return Size of Buffer initialised
@@ -119,7 +122,7 @@ class CircularBuffer {
     //deconstructor
     ~CircularBuffer()
     {
-      free(Buffer.arr);
+      if(Buffer.arr != NULL) free(Buffer.arr);
     }
 };
 
